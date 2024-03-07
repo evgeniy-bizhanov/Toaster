@@ -213,7 +213,7 @@ open class ToastView: UIView {
     y = height - (backgroundViewSize.height + y)
     self.frame = CGRect(
       x: x,
-      y: y,
+      y: KeyboardObserver.shared.didKeyboardShow ? y - KeyboardObserver.shared.endFrame.height : y,
       width: backgroundViewSize.width,
       height: backgroundViewSize.height
     )

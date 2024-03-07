@@ -13,6 +13,7 @@ final class KeyboardObserver {
   static let shared = KeyboardObserver()
   
   private(set) var didKeyboardShow: Bool = false
+  private(set) var endFrame: CGRect = .zero
   
   init() {
     #if swift(>=4.2)
@@ -36,11 +37,15 @@ final class KeyboardObserver {
     )
   }
   
-  @objc private func keyboardWillShow() {
+  @objc private func keyboardWillShow(note: Notification) {
+    let userInfo = note.userInfo
+    endFrame = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
     didKeyboardShow = true
   }
   
-  @objc private func keyboardDidHide() {
+  @objc private func keyboardDidHide(note: Notification) {
+    let userInfo = note.userInfo
+    endFrame = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
     didKeyboardShow = false
   }
   

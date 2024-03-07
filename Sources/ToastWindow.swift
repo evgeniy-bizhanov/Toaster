@@ -167,8 +167,14 @@ open class ToastWindow: UIWindow {
   }
 
   @objc private func keyboardWillShow() {
-    guard let topWindow = self.topWindow(),
-      let subviews = self.originalSubviews.allObjects as? [UIView] else { return }
+    guard let subviews = self.originalSubviews.allObjects as? [UIView] else { return }
+    DispatchQueue.main.async {
+        subviews.forEach {
+            $0.setNeedsLayout()
+            $0.layoutIfNeeded()
+        }
+    }
+    guard let topWindow = self.topWindow() else { return }
     for subview in subviews {
       topWindow.addSubview(subview)
     }
@@ -176,6 +182,14 @@ open class ToastWindow: UIWindow {
 
   @objc private func keyboardDidHide() {
     guard let subviews = self.originalSubviews.allObjects as? [UIView] else { return }
+    DispatchQueue.main.async {
+        UIView.animate(withDuration: 0.1) {
+            subviews.forEach {
+                $0.setNeedsLayout()
+                $0.layoutIfNeeded()
+            }
+        }
+    }
     for subview in subviews {
       super.addSubview(subview)
     }
